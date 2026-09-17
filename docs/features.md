@@ -14,11 +14,13 @@ Plug Inu helps you spot what matters while browsing and provides a foundation fo
 | Character length | Words of 1–1,000 Unicode code points; not grapheme clusters |
 | Regex | Advanced bounded syntax; see architecture |
 | Preferences | Positive/negative colors; negatives also underlined |
-| UI | Popup, persistent native side panel, options page |
+| UI | Popup, persistent native side panel, options page and dedicated skills configuration |
+| Domain skills | Exact-domain contracts; bundled X example plus local overrides |
+| Skills management | Persistent activation, search, load/unload, create/edit/reset/delete and JSON/Markdown import/export |
 | Storage | Local only, versioned, migrated and validated |
 | Connections / AI | Interfaces only; no providers or keys |
 
-Excluded text includes scripts, styles, form controls, buttons, editable elements, hidden/aria-hidden subtrees, and non-HTML text. CSS visibility alone is not inspected. Shadow roots, iframes, canvas, PDF viewers and browser-protected pages are not scanned. Phrases split by HTML tags do not match. Regex anchors refer to individual text nodes. Matching has documented large-page limits and does not perform semantic search. No remote services, syncing, import/export, per-site UI, profile renaming or in-place rule editing are included.
+Excluded text includes scripts, styles, form controls, buttons, editable elements, hidden/aria-hidden subtrees, and non-HTML text. CSS visibility alone is not inspected. Shadow roots, iframes, canvas, PDF viewers and browser-protected pages are not scanned. Phrases split by HTML tags do not match. Regex anchors refer to individual text nodes. Matching has documented large-page limits and does not perform semantic search. No remote services, syncing, profile backups, profile renaming or in-place rule editing are included. Domain skills have their own [configuration and import/export](domain-skills.md); skill actions are instructions, with no automatic execution or external agent integration.
 
 ## Expanded feature status
 
@@ -27,6 +29,7 @@ Excluded text includes scripts, styles, form controls, buttons, editable element
 | Feature | Current status |
 | --- | --- |
 | Global switch, independent profiles, positive/negative highlights | Available in the foundation; native browser validation remains pending |
+| Domain skills and management screen | Available; activation, local merging, import/export and UI behavior covered by automated tests; native Chrome checks pending |
 | Popup, side panel and settings | Available; persistent toolbar/sidebar preference planned |
 | Profile rename, row editing/activity, search, word-list tabs, backups | Planned; current rules use delete/recreate |
 | Matching criteria | Seven modes available; the source brief's 17-type catalog needs definitions |

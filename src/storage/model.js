@@ -1,8 +1,9 @@
+import { validateLocalSkills, listSkills } from '../domains/model.js';
 import { validateRule } from '../matching/engine.js';
 export const STORAGE_KEY = 'plugInu';
-export const VERSION = 1;
+export const VERSION = 3;
 export function defaults() {
-  return { version: VERSION, enabled: true, profiles: [], preferences: { positiveColor: '#ffe08a', negativeColor: '#ff9f9f' }, connections: [] };
+  return { version: VERSION, enabled: true, profiles: [], preferences: { positiveColor: '#ffe08a', negativeColor: '#ff9f9f' }, connections: [], domainSkills: [], disabledDomainSkills: [] };
 }
 export function validateState(state) {
   if (!state || state.version !== VERSION || typeof state.enabled !== 'boolean' || !Array.isArray(state.profiles) || !Array.isArray(state.connections)) throw new Error('Invalid saved settings.');
@@ -21,12 +22,16 @@ export function validateState(state) {
   }
   if (count > 200) throw new Error('Maximum 200 rules across all profiles.');
   for (const key of ['positiveColor', 'negativeColor']) if (!/^#[0-9a-f]{6}$/i.test(state.preferences?.[key])) throw new Error('Invalid highlight color.');
+  validateLocalSkills(state.domainSkills);
+  if (!Array.isArray(state.disabledDomainSkills) || new Set(state.disabledDomainSkills).size !== state.disabledDomainSkills.length || state.disabledDomainSkills.some(domain => !listSkills(state.domainSkills).some(skill => skill.domain === domain))) throw new Error('Invalid disabled domain skills.');
   return state;
 }
 export function migrate(raw) {
   if (raw == null) return defaults();
   if (raw.version > VERSION) throw new Error('These settings require a newer Plug Inu version.');
   // Version 0 prototype had enabled/profiles but no preferences or connections.
+  if (raw.version === 2) return validateState({ ...raw, version: VERSION, disabledDomainSkills: [] });
+  if (raw.version === 1) return validateState({ ...raw, version: VERSION, domainSkills: [], disabledDomainSkills: [] });
   if (raw.version === 0) return validateState({ ...defaults(), ...raw, version: VERSION, preferences: { ...defaults().preferences, ...raw.preferences }, connections: raw.connections ?? [] });
   return validateState(raw);
 }

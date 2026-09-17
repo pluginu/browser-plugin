@@ -43,7 +43,7 @@ test('global and profile enablement', () => {
 test('storage defaults, migration, validation and future versions', () => {
  assert.deepEqual(migrate(undefined), defaults());
  assert.equal(migrate({ version: 0, enabled: false, profiles: [] }).enabled, false);
- assert.throws(() => migrate({ version: 2 })); assert.throws(() => migrate({ version: 1 }));
+ assert.throws(() => migrate({ version: 4 })); assert.throws(() => migrate({ version: 1 }));
  const state = defaults(); state.preferences.positiveColor = 'red;bad'; assert.throws(() => validateState(state));
 });
 test('repository serializes concurrent writes and recovers after rejection', async () => {

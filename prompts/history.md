@@ -624,3 +624,40 @@ The overlay-ad adapter (prompt 044) recognizes an active ad layer over the same 
 - Preserved and included the pending README/prompt-procedure changes and existing deletion of `docs/prompts/002-push-to-github.md`. Updated the changelog.
 - Validation: all 12 tests passed; JavaScript syntax checks and production build passed; local Markdown links and anchors passed across README and six docs. Removed a trailing blank line found by the initial whitespace check; final diff validation follows before commit. Native Chrome checks remain pending; no new runtime features were implemented.
 - Publication follows the existing current-branch SSH workflow on `main` to `origin` (`pluginu/browser-plugin`). Review notes are included here and in the commit description. This request authorizes commit/push; no separate GitHub comment was requested.
+
+## 2026-09-17 — Domain agent skills
+
+**Prompt**
+
+> lets add a feature where each domain is like an agent skill it can be loaded and used as neededthe skill dile for that domain is merge rof what is thre andwht is local to tht install exactle x domain should have following features specifing url and input out and actios ...
+
+**Processing notes**
+
+- Added exact-domain skills with URLs, typed input/output descriptions and action instructions; included a bundled X example.
+- Added validated installation-local overrides, action-ID merging and disablement, worker commands, shared editor/catalog/preview and Markdown export. Migrated storage to version 2 while preserving old settings.
+- Documented contracts, merge rules, extension command interface and manual checks. Actions are descriptive; no browser automation or external agent integration is implemented.
+- Validation: all 17 tests passed, including merge, hostname isolation, validation, migration, worker commands and UI load/save coverage; syntax checks and production build passed. Native Chrome visual/download testing remains manual.
+
+## 2026-09-17 — Skills management configuration
+
+**Prompt**
+
+> let's have a config screen where usercanacticate and load skills ... all that skills management
+
+**Processing notes**
+
+- Added a dedicated skills configuration screen, accessible through Manage skills in popup, side panel and Settings.
+- Added persistent activation enforced by the worker, search, load/unload, a new-skill template, staged file import, JSON/Markdown export, editing, reset and deletion. Storage version 3 preserves local definitions and existing settings.
+- Added migration, activation, import round-trip, management UI and worker lifecycle coverage. All 20 tests, syntax checks, production build and whitespace checks passed. Native Chrome visual/download behavior remains to be checked manually.
+
+## 2026-09-17 — GitHub flow and documentation
+
+**Prompt**
+
+> run github flow ad documents
+
+**Processing notes**
+
+- Reviewed the complete domain skills and management-screen changes for publication. Updated README setup/verification, feature availability and limits, architecture migrations, manual Chrome checks and changelog; included the detailed domain-skills guide and all saved prompts.
+- Validation: all 20 tests, JavaScript syntax checks and production build passed. Fetched origin and verified main had no remote divergence before commit. Native Chrome visual/installation/download checks remain pending.
+- Publishing the reviewed changes using the established current-branch SSH workflow: commit on main and push to origin/main. No separate GitHub comment or pull request is part of this workflow. Publication outcome is reported after verifying the remote commit.

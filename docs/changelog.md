@@ -24,3 +24,15 @@
 - Distinguished implemented capabilities from planned work, removed inherited implementation claims, and recorded missing match-type/import/visit specifications. Retained Plug Inu's current highlight treatment, matching safety limits, 180 ms debounce and credential boundary.
 - Included the pending prompt-processing documentation changes and preserved the existing removal of the historical publication prompt file. Its original contents remain in Git history.
 - No application code, dependencies or permissions changed.
+
+## 2026-09-17 — Domain skills
+
+Added exact-domain skill loading, bundled X instructions, locally saved overrides, action merging/disablement, JSON editing and Markdown export across extension interfaces. Storage version 2 preserves existing settings and adds local domain definitions. Actions are descriptive; automatic execution is not implemented.
+
+## 2026-09-17 — Skills management screen
+
+Added a dedicated Manage skills page, linked from popup, side panel and Settings. Includes persistent activation, search, load/unload, new-skill templates, review-before-save JSON/Markdown import, JSON export, local reset and deletion. Inactive skills cannot load. Storage version 3 preserves earlier local definitions and defaults existing skills to active.
+
+## Documentation and publication review — 2026-09-17
+
+Updated feature status, setup instructions, storage migration details and the native Chrome checklist to cover domain skills. Verified 20 automated tests, syntax checks and the production build before publication; native Chrome installation, rendering and downloads remain manual.

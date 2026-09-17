@@ -13,4 +13,6 @@ Automated DOM tests use jsdom and a Highlight registry test double. They do not 
 9. Test news/search/feed sites for scrolling, layout, text selection, editable controls and dynamic updates. Try a huge document; expect capped coverage rather than total coverage.
 10. Confirm internal Chrome pages and extension-store pages are unaffected. Restrict website access in Chrome extension settings and confirm that restriction is honored.
 
+11. Open **Manage skills** from each interface. Follow the [domain skills manual checks](domain-skills.md#manual-verification) for activation persistence, loading, editing, validation, search, import/export, reset and deletion. Confirm changing highlighting preferences leaves a loaded skill preview intact.
+
 Native load and visual QA remain pending until this checklist is run in an actual Chromium extension session.

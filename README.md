@@ -22,6 +22,7 @@ npm run build
 3. Pin Plug Inu. Open its popup and add a profile, then a positive or negative rule.
 4. Open or refresh an ordinary HTTP/HTTPS webpage. Existing tabs need one refresh after installation or extension reload; subsequent rule changes apply without reloading.
 5. Use **Open side panel** for persistent controls, or **Settings** to change colors.
+6. Choose **Manage skills** to activate domain skills, load instructions and manage local definitions. See the [skills guide](docs/domain-skills.md).
 
 Rebuild and click Reload on the extension after source changes. `dist/` is generated and ignored by Git.
 
@@ -33,6 +34,7 @@ Rebuild and click Reload on the extension after source changes. `dist/` is gener
 - Shared popup, side panel, and options interface.
 - Versioned local storage with migrations and serialized writes.
 - Dynamic page observation and removable range highlights, without DOM text wrappers.
+- Dedicated **Manage skills** configuration with activation, search, on-demand loading, bundled + local definitions, URL/input/output/action contracts, file import, and Markdown/JSON export. See [domain skills](docs/domain-skills.md).
 - Provider-neutral connection and AI suggestion interfaces; no speculative integrations.
 
 The initial profile list is empty so nothing is highlighted until you choose your interests. Rules are local to this browser and are not synced. Rule editing currently means deleting and recreating a rule.
@@ -47,4 +49,4 @@ Browser internal pages, extension stores, PDFs, shadow DOM and frames are outsid
 
 ## Verification
 
-Automated tests cover matching, profile enablement, storage/migrations, concurrent writes, DOM eligibility, range cleanup, dynamic content, and connection contracts. `npm run check` is a syntax check, not a type checker. Build validates declared manifest entry points. Native Chrome installation and visual behavior require the manual checklist; they are not asserted by the unit tests.
+Automated tests cover matching, profile enablement, storage/migrations, concurrent writes, DOM eligibility, range cleanup, dynamic content, connection contracts, and domain skill merging, activation, import and management UI. `npm run check` is a syntax check, not a type checker. Build validates declared manifest entry points. Native Chrome installation and visual behavior require the manual checklist; they are not asserted by the unit tests.

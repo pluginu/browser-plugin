@@ -64,3 +64,6 @@ chrome.storage.onChanged.addListener((changes, area) => {
 });
 document.addEventListener('focusout', () => setTimeout(() => { if (refreshPending && !document.activeElement?.closest('form')) { refreshPending = false; perform('read'); } }, 0));
 perform('read');
+
+const manageSkills = button('Manage skills', () => chrome.tabs.create({ url: chrome.runtime.getURL('skills.html') }).catch(e => error(e.message)));
+document.querySelector('nav').append(manageSkills);

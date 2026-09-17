@@ -3,22 +3,23 @@
 ## Responsibilities
 
 - `background/`: MV3 service worker; sole settings writer, command validation via storage model.
-- `storage/`: schema version 1, migrations, validation and serialized read/modify/write operations.
+- `storage/`: schema version 3, migrations, validation and serialized read/modify/write operations.
 - `profiles/`: profile creation and effective rule selection.
 - `matching/`: browser-independent rule validation, compilation and offset matching.
 - `highlighting/`: eligible DOM text selection and CSS Custom Highlight range rendering.
 - `content/`: storage subscriptions, debounced DOM observation, bounded scan scheduling.
 - `shared/`: common UI for popup, side panel and options.
 - `connections/`: adapter registry and isolated suggestion-provider boundary.
+- `domains/`: bundled domain contracts, validated local overrides, on-demand merging, JSON/Markdown import/export and configuration screen.
 - `types/`: JSDoc contracts for extension points.
 
 The content script reads local storage; extension pages send explicit commands to the worker. Commands from website content scripts are rejected. The worker applies commands against the latest settings and queues writes to prevent lost updates from multiple interfaces. Failures are returned to the UI, and rejected writes do not poison the queue. Chrome storage events update open interfaces and content scripts. UI refresh is deferred while a form has focus.
 
 ## Storage contract
 
-The `plugInu` local-storage key contains `{version, enabled, profiles, preferences, connections}`. Each profile has an ID, name, enabled flag and rules. Each rule has an ID, mode, value, kind and caseSensitive flag. Preferences contain positiveColor and negativeColor, validated as hex colors. Connections is an empty configuration list reserved for future adapters, never secrets.
+The `plugInu` local-storage key contains `{version, enabled, profiles, preferences, connections, domainSkills, disabledDomainSkills}`. Each profile has an ID, name, enabled flag and rules. Each rule has an ID, mode, value, kind and caseSensitive flag. Preferences contain positiveColor and negativeColor, validated as hex colors. Connections is an empty configuration list reserved for future adapters, never secrets.
 
-Missing data initializes defaults. The documented version-0 prototype shape (`version`, `enabled`, `profiles`) migrates to version 1 with default preferences and connections. Future or corrupt schemas fail explicitly instead of being overwritten. Installation persists the normalized schema; reads migrate in memory and subsequent writes persist it.
+Missing data initializes defaults. The documented version-0 prototype shape (`version`, `enabled`, `profiles`) migrates to version 3 with default preferences and connections. Version 1 migrates to version 3 with an empty local domain-skill list. Version 2 preserves its local definitions and adds an empty disabled-domain list. Existing skills remain active during migration. Domain overrides are validated against bundled contracts before writes; see [merge rules](domain-skills.md). Future or corrupt schemas fail explicitly instead of being overwritten. Installation persists the normalized schema; reads migrate in memory and subsequent writes persist it.
 
 ## Highlighting decision
 
@@ -36,4 +37,4 @@ Connection adapters expose `id`, `connect`, `disconnect`. Registration checks th
 
 ## Build and browser support
 
-esbuild bundles three entry points so content scripts need no dynamic imports or web-accessible resources. jsdom is used only in tests. Chrome 120 is the baseline. The native [side-panel API](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) opens through a user action. Future browser support should replace browser-specific storage/runtime/panel boundaries and check highlight support; it is not claimed today.
+esbuild bundles four entry points (worker, content, shared UI and skills configuration) so content scripts need no dynamic imports or web-accessible resources. jsdom is used only in tests. Chrome 120 is the baseline. The native [side-panel API](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) opens through a user action. Future browser support should replace browser-specific storage/runtime/panel boundaries and check highlight support; it is not claimed today.

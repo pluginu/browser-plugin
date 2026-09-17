@@ -9,11 +9,36 @@ test('worker command flow persists profiles and rules; rejects website senders a
   storage: { local: { get: async () => structuredClone(data), set: async value => { data = structuredClone(value); } } },
   runtime: { id: 'test', getURL: path => `chrome-extension://test/${path}`, onInstalled: { addListener() {} }, onMessage: { addListener: cb => { listener = cb; } } },
  };
- vm.runInNewContext(outputFiles[0].text, { chrome, crypto: globalThis.crypto, console });
+ vm.runInNewContext(outputFiles[0].text, { chrome, crypto: globalThis.crypto, console, URL, structuredClone });
  const sender = { id: 'test', url: 'chrome-extension://test/popup.html' };
  const command = message => new Promise(resolve => listener(message, sender, resolve));
  assert.equal(listener({ action: 'toggleGlobal' }, { ...sender, tab: { id: 1 } }, () => assert.fail('Content scripts may not write settings')), undefined);
  assert.equal((await command({ action: 'read' })).state.enabled, true);
+ assert.equal((await command({ action: 'listDomainSkills' })).skills[0].domain, 'x.com');
+ assert.equal((await command({ action: 'loadDomainSkill', url: 'https://x.com/home' })).skill.name, 'X');
+ assert.ok((await command({ action: 'saveDomainSkill', skill: { domain: 'x.com', urls: ['https://evil.test/'] } })).error);
+ await command({ action: 'saveDomainSkill', skill: { domain: 'x.com', name: 'My X' } });
+ assert.equal((await command({ action: 'loadDomainSkill', url: 'https://x.com/' })).skill.name, 'My X');
+ await command({ action: 'deleteDomainSkill', domain: 'x.com' });
+ assert.equal((await command({ action: 'loadDomainSkill', url: 'https://x.com/' })).skill.name, 'X');
+ await command({ action: 'setDomainSkillActive', domain: 'x.com', active: false });
+ assert.equal((await command({ action: 'listDomainSkills' })).skills[0].active, false);
+ assert.match((await command({ action: 'loadDomainSkill', url: 'https://x.com/' })).error, /Activate/);
+ assert.equal((await command({ action: 'read' })).state.disabledDomainSkills[0], 'x.com');
+ assert.ok((await command({ action: 'setDomainSkillActive', domain: 'unknown.test', active: true })).error);
+ assert.ok((await command({ action: 'setDomainSkillActive', domain: 'x.com', active: 'yes' })).error);
+ await command({ action: 'saveDomainSkill', skill: { domain: 'x.com', name: 'Still inactive' } });
+ assert.match((await command({ action: 'loadDomainSkill', url: 'https://x.com/' })).error, /Activate/);
+ await command({ action: 'deleteDomainSkill', domain: 'x.com' });
+ assert.equal((await command({ action: 'listDomainSkills' })).skills[0].active, false);
+ await command({ action: 'setDomainSkillActive', domain: 'x.com', active: true });
+ assert.equal((await command({ action: 'loadDomainSkill', url: 'https://x.com/' })).skill.name, 'X');
+ const custom = { domain: 'example.com', name: 'Example', description: 'Example skill', instructions: 'Read', urls: ['https://example.com/'], inputs: [], outputs: [], actions: [] };
+ await command({ action: 'saveDomainSkill', skill: custom });
+ await command({ action: 'setDomainSkillActive', domain: 'example.com', active: false });
+ const removed = await command({ action: 'deleteDomainSkill', domain: 'example.com' });
+ assert.equal(removed.state.disabledDomainSkills.length, 0);
+ assert.ok((await command({ action: 'loadDomainSkill', url: 'https://example.com/' })).error);
  const added = await command({ action: 'addProfile', name: 'Research' });
  const profileId = added.state.profiles[0].id;
  const validRule = { mode: 'word', value: 'dog', kind: 'negative', caseSensitive: false };
