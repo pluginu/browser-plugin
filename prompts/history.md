@@ -661,3 +661,52 @@ The overlay-ad adapter (prompt 044) recognizes an active ad layer over the same 
 - Reviewed the complete domain skills and management-screen changes for publication. Updated README setup/verification, feature availability and limits, architecture migrations, manual Chrome checks and changelog; included the detailed domain-skills guide and all saved prompts.
 - Validation: all 20 tests, JavaScript syntax checks and production build passed. Fetched origin and verified main had no remote divergence before commit. Native Chrome visual/installation/download checks remain pending.
 - Publishing the reviewed changes using the established current-branch SSH workflow: commit on main and push to origin/main. No separate GitHub comment or pull request is part of this workflow. Publication outcome is reported after verifying the remote commit.
+
+## 2026-09-17 — Plug Inu lore and UI voice
+
+**Prompt**
+
+> &#x20;the lore of this is plug inu i highly connected most connected dog he want to teach his customer to be conncetd giving them to tools to be self relianent conncected individual not a peraon who know as person who is connectde  say make sujre ui has that lore, and remove any reference or keywords used by other app like spot ..
+
+**Processing notes**
+
+- Updated popup, side panel, settings and skills copy around Plug Inu teaching customers to build their own connections and become self-reliant. Kept labels specific to the implemented highlighting and skill-instruction features.
+- Removed inherited Spot/Skip the noise wording from active UI, extension metadata, the demo page and current product documentation. Historical prompts and changelog entries remain as records.
+- Validation: production build, JavaScript syntax checks and all 20 existing tests passed. Native Chrome visual validation was not performed.
+
+## 2026-09-17 — Most connected dog online
+
+**Prompt**
+
+> it's the most connecte dog online update the contenct an dui acccordingly
+
+**Processing notes**
+
+- Standardized the identity to “The most connected dog online” in popup, side panel, settings, skills, extension/package descriptions, README and current feature requirements.
+- Rebuilt the extension successfully; whitespace validation passed.
+
+## 2026-09-17 — Publish branding and documentation
+
+**Prompt**
+
+> run githbu flow on doc in rep
+
+**Processing notes**
+
+- Reviewed the pending branding, favicon, icon and documentation changes for the established current-branch SSH publication workflow on main. Fixed duplicated wording in README, documented the temporary icon, and extended the manual Chrome checklist and changelog.
+- Fetched origin; main had no remote divergence. Native Chrome installation and visual checks remain pending.
+
+### Earlier icon prompts recorded retrospectively
+
+These requests were implemented earlier in this session but were not saved at that time; recorded here without altering prior history.
+
+> let's add logo to the pluging it's temp just say p
+
+> this is for the browser tab when pinned
+
+- Added 16, 32, 48 and 128 pixel p icons, manifest toolbar/extension references, and favicons on all four extension pages. Retained the dog mascot in app headers. Build passed during implementation.
+
+### Publication validation
+
+- All 20 tests, JavaScript syntax checks, production build and whitespace checks passed. Verified generated icon dimensions and favicon references for all extension pages.
+- Publishing the reviewed changes on main to origin/main using SSH; the remote commit and clean working tree will be verified after push.

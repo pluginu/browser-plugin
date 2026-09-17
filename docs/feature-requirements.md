@@ -1,8 +1,8 @@
 # Plug Inu feature requirements
 
-**The most connected dog on the internet. Everything you need to get connected.**
+**The most connected dog online. Learn the tools. Build your own connections.**
 
-Plug Inu connects you to what matters while browsing, starting with words, phrases and subjects you want to spot. This guide adapts the supplied Spot a Dog feature brief to Plug Inu's browser extension and future connection architecture.
+Plug Inu shares his tools and know-how to help people become connected, self-reliant individuals. His browser toolkit starts with highlighting words and phrases you choose and loading site instructions you control. This guide describes Plug Inu's browser extension and future connection architecture.
 
 This is the **target product experience**, not a list of shipped functionality. The [current features and status](features.md) describe the implemented foundation. Controls and behaviors below are requirements unless that status table marks them available. This documentation update does not implement them. The original supplied brief is preserved in [prompt history](../prompts/history.md).
 
@@ -15,7 +15,7 @@ This is the **target product experience**, not a list of shipped functionality. 
 - **Profile navigation:** a Profile dropdown shows saved details; Search keywords filters both lists immediately. Switching profiles resets search and confirms discarding changed drafts. Profile backups provides import/export; backup validation and version migration must be specified before implementation.
 - **Word list tabs:** Positive Words and Negative Words switch lists in place and retain unsaved row edits. Rows use normal scrolling. Support arrow keys, Home/End and visible keyboard focus.
 
-For example, an **AI Infrastructure** profile could spot `GPU`, `inference` and `data center`, and mark `gaming` and `graphics settings` as negative terms. Other profiles can remain enabled independently.
+For example, an **AI Infrastructure** profile could highlight `GPU`, `inference` and `data center`, and mark `gaming` and `graphics settings` as negative terms. Other profiles can remain enabled independently.
 
 ## Matching and highlight colors
 

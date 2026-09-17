@@ -18,7 +18,7 @@ function render() {
   $('#global').setAttribute('aria-pressed', String(state.enabled));
   $('#count').textContent = `${state.profiles.filter(p => p.enabled).length} enabled`;
   const container = $('#profiles'); container.replaceChildren();
-  if (!state.profiles.length) container.append(el('p', 'Your first connection starts here. Add a profile, then add the words you care about.', 'empty'));
+  if (!state.profiles.length) container.append(el('p', 'Start with something you want to explore. Create a profile and add your words; Plug Inu will highlight matching text as you browse.', 'empty'));
   for (const profile of state.profiles) {
     const card = el('article', '', 'profile');
     const heading = el('div', '', 'section-heading'); heading.append(el('h4', profile.name));
@@ -26,14 +26,14 @@ function render() {
     heading.append(toggle); card.append(heading);
     const list = el('ul', '', 'rules');
     for (const rule of profile.rules) {
-      const item = el('li', '', rule.kind); const detail = el('div'); detail.append(el('strong', rule.value), el('small', `${rule.kind === 'positive' ? 'Spot' : 'Avoid'} · ${labels[rule.mode]}${rule.caseSensitive ? ' · Case sensitive' : ''}`));
+      const item = el('li', '', rule.kind); const detail = el('div'); detail.append(el('strong', rule.value), el('small', `${rule.kind === 'positive' ? 'Highlight' : 'Caution'} · ${labels[rule.mode]}${rule.caseSensitive ? ' · Case sensitive' : ''}`));
       const remove = button('×', () => perform('deleteRule', { profileId: profile.id, ruleId: rule.id }), 'remove'); remove.setAttribute('aria-label', `Remove ${rule.value}`); item.append(detail, remove); list.append(item);
     }
     card.append(list);
     const details = el('details'); details.append(el('summary', '+ Add a rule'));
     const form = el('form'); const valueLabel = el('label', 'Word, phrase, length, or pattern'); const input = el('input'); input.name = 'value'; input.required = true; input.maxLength = 200; valueLabel.append(input);
     const row = el('div', '', 'inline');
-    for (const [name, entries] of [['kind', [['positive', 'Spot · positive'], ['negative', 'Avoid · negative']]], ['mode', MODES.map(m => [m, labels[m]])]]) {
+    for (const [name, entries] of [['kind', [['positive', 'Highlight · positive'], ['negative', 'Caution · negative']]], ['mode', MODES.map(m => [m, labels[m]])]]) {
       const label = el('label', name === 'kind' ? 'Treatment' : 'Match'); const select = el('select'); select.name = name;
       for (const [key, text] of entries) { const option = el('option', text); option.value = key; select.append(option); }
       label.append(select); row.append(label);

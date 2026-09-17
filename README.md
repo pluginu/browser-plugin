@@ -1,8 +1,8 @@
 # Plug Inu
 
-**The most connected dog on the internet.** Everything you need to get connected.
+**The most connected dog online.** Plug Inu shares his tools and know-how to help you build your own connections and become self-reliant.
 
-A small Chrome/Chromium Manifest V3 extension that spots useful words and phrases on webpages. Plain JavaScript, no runtime dependencies, no accounts or external requests.
+A small Chrome/Chromium Manifest V3 extension that highlights your chosen words and phrases on webpages. Plain JavaScript, no runtime dependencies, no accounts or external requests.
 
 ## Develop and load
 
@@ -19,7 +19,7 @@ npm run build
 
 1. Open `chrome://extensions` and enable **Developer mode**.
 2. Choose **Load unpacked**, then select this repository's `dist/` directory.
-3. Pin Plug Inu. Open its popup and add a profile, then a positive or negative rule.
+3. Pin Plug Inu; its temporary icon is a lowercase **p** on green. Open its popup and add a profile, then a positive or negative rule.
 4. Open or refresh an ordinary HTTP/HTTPS webpage. Existing tabs need one refresh after installation or extension reload; subsequent rule changes apply without reloading.
 5. Use **Open side panel** for persistent controls, or **Settings** to change colors.
 6. Choose **Manage skills** to activate domain skills, load instructions and manage local definitions. See the [skills guide](docs/domain-skills.md).
@@ -39,7 +39,7 @@ Rebuild and click Reload on the extension after source changes. `dist/` is gener
 
 The initial profile list is empty so nothing is highlighted until you choose your interests. Rules are local to this browser and are not synced. Rule editing currently means deleting and recreating a rule.
 
-The [expanded feature requirements](docs/feature-requirements.md) describe the Plug Inu roadmap adapted from the supplied Spot a Dog guide, including reviewed AI discovery, keyword counts, Auto Scroll, visit history and ad skipping. See the [feature status table](docs/features.md#expanded-feature-status) for what is available today.
+The [expanded feature requirements](docs/feature-requirements.md) describe the Plug Inu roadmap, including reviewed AI discovery, keyword counts, Auto Scroll, visit history and ad skipping. See the [feature status table](docs/features.md#expanded-feature-status) for what is available today.
 
 ## Permissions and privacy
 

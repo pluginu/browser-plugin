@@ -1,7 +1,7 @@
 import { parseSkillFile } from './model.js';
 export function setupDomainSkills(root, reportError) {
-  root.innerHTML = `<h2>Your domain skills</h2>
-    <p class="hint">Activate the skills you want available, then load their instructions when needed. Loading a skill does not run its actions.</p>
+  root.innerHTML = `<h2>Your site skills</h2>
+    <p class="hint">Each skill holds instructions for a website. Activate the ones you want, then load their instructions to learn how to use that site. Loading a skill does not run its actions.</p>
     <div class="skill-toolbar"><button id="domain-new" type="button">New skill</button><label class="file-label">Import skill file<input id="domain-import" type="file" accept=".json,.md,application/json,text/markdown"></label></div>
     <p id="domain-status" role="status" aria-live="polite"></p>
     <label>Find a skill<input id="domain-search" type="search" placeholder="Search by name or domain"></label>

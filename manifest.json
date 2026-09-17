@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Plug Inu",
   "version": "0.1.0",
-  "description": "Everything you need to get connected. Spot what matters. Skip the noise.",
+  "description": "Learn from Plug Inu, the most connected dog online. Tools to build your own connections and become self-reliant.",
   "minimum_chrome_version": "120",
   "permissions": [
     "storage",
@@ -14,7 +14,11 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Plug Inu"
+    "default_title": "Plug Inu",
+    "default_icon": {
+      "16": "public/icons/icon-16.png",
+      "32": "public/icons/icon-32.png"
+    }
   },
   "side_panel": {
     "default_path": "sidepanel.html"
@@ -34,5 +38,11 @@
       ],
       "run_at": "document_idle"
     }
-  ]
+  ],
+  "icons": {
+    "16": "public/icons/icon-16.png",
+    "32": "public/icons/icon-32.png",
+    "48": "public/icons/icon-48.png",
+    "128": "public/icons/icon-128.png"
+  }
 }

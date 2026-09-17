@@ -36,3 +36,9 @@ Added a dedicated Manage skills page, linked from popup, side panel and Settings
 ## Documentation and publication review — 2026-09-17
 
 Updated feature status, setup instructions, storage migration details and the native Chrome checklist to cover domain skills. Verified 20 automated tests, syntax checks and the production build before publication; native Chrome installation, rendering and downloads remain manual.
+
+## 2026-09-17 — Plug Inu identity and temporary icon
+
+- Added temporary lowercase p icons for the extension, pinned toolbar and extension-page favicons.
+- Standardized “The most connected dog online” across the interface and current product documentation. Introduced copy about learning the tools, building connections and becoming self-reliant.
+- Replaced inherited Spot/Skip the noise copy with Plug Inu wording and Highlight/Caution rule labels. Historical request records are preserved.

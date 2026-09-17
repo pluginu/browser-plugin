@@ -1,6 +1,6 @@
 # Plug Inu features and scope
 
-Plug Inu helps you spot what matters while browsing and provides a foundation for future connections. This page describes the current implementation. The [feature requirements](feature-requirements.md) adapt the supplied feature guide into the target product experience.
+Plug Inu helps you learn the tools to build your own connections. The current toolkit highlights words you choose and lets you manage site skills. This page describes the current implementation. The [feature requirements](feature-requirements.md) adapt the supplied feature guide into the target product experience.
 
 | Capability | Initial behavior |
 | --- | --- |

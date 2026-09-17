@@ -3,7 +3,7 @@
 Automated DOM tests use jsdom and a Highlight registry test double. They do not validate actual browser painting, extension installation, native panel behavior or website compatibility.
 
 1. Build; load `dist/` unpacked in Chrome 120+. Confirm no extension errors and inspect the service worker console.
-2. Open popup. Add a Research profile with positive exact word `dog` and negative contains `noise`. Open the side panel with its button; check Settings opens an options tab.
+2. Pin the extension and confirm the temporary lowercase **p** icon appears in the toolbar. Open Settings and Skills in tabs, pin the tabs and confirm the same favicon appears. Check “The most connected dog online” and the learning/self-reliance copy in popup, side panel, Settings and Skills. Open popup. Add a Research profile with positive exact word `dog` and negative contains `noise`. Open the side panel with its button; check Settings opens an options tab.
 3. Run `python3 -m http.server 8080 --directory public` and visit `http://localhost:8080/test-page.html`.
 4. Confirm yellow positive / red underlined negative ranges; negative wins overlaps. Verify there are no wrapper elements around matches.
 5. Toggle global and profile switches in either interface; confirm immediate removal/restoration without refresh and consistent state across interfaces.
