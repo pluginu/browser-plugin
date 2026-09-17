@@ -1,0 +1,11 @@
+import { build } from 'esbuild';
+import { rm, mkdir, copyFile, readFile, writeFile, cp } from 'node:fs/promises';
+await rm('dist', { recursive: true, force: true }); await mkdir('dist');
+await build({ entryPoints: { background: 'src/background/index.js', content: 'src/content/index.js', ui: 'src/shared/ui.js' }, bundle: true, outdir: 'dist', target: 'chrome120', format: 'iife', sourcemap: true });
+await copyFile('manifest.json', 'dist/manifest.json');
+await copyFile('src/shared/ui.css', 'dist/ui.css');
+await cp('public', 'dist/public', { recursive: true });
+for (const page of ['popup', 'sidepanel', 'options']) await copyFile(`src/${page}/index.html`, `dist/${page}.html`);
+const manifest = JSON.parse(await readFile('dist/manifest.json', 'utf8'));
+for (const path of [manifest.background.service_worker, manifest.action.default_popup, manifest.side_panel.default_path, manifest.options_ui.page, ...manifest.content_scripts.flatMap(s => s.js)]) await readFile(`dist/${path}`);
+console.log('Built and validated unpacked extension in dist/');
