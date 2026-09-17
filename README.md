@@ -6,6 +6,8 @@ A small Chrome/Chromium Manifest V3 extension that spots useful words and phrase
 
 ## Develop and load
 
+Before starting any requested work, save the user prompt in the repository. Follow the [prompt processing flow](docs/prompt-processing-flow.md) for every prompt, including follow-ups, and record completion notes afterward.
+
 Requires Node.js 22+ and Chrome/Chromium 120+.
 
 ```sh
@@ -34,6 +36,8 @@ Rebuild and click Reload on the extension after source changes. `dist/` is gener
 - Provider-neutral connection and AI suggestion interfaces; no speculative integrations.
 
 The initial profile list is empty so nothing is highlighted until you choose your interests. Rules are local to this browser and are not synced. Rule editing currently means deleting and recreating a rule.
+
+The [expanded feature requirements](docs/feature-requirements.md) describe the Plug Inu roadmap adapted from the supplied Spot a Dog guide, including reviewed AI discovery, keyword counts, Auto Scroll, visit history and ad skipping. See the [feature status table](docs/features.md#expanded-feature-status) for what is available today.
 
 ## Permissions and privacy
 

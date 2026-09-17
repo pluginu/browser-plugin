@@ -1,4 +1,6 @@
-# Features and scope
+# Plug Inu features and scope
+
+Plug Inu helps you spot what matters while browsing and provides a foundation for future connections. This page describes the current implementation. The [feature requirements](feature-requirements.md) adapt the supplied feature guide into the target product experience.
 
 | Capability | Initial behavior |
 | --- | --- |
@@ -17,3 +19,23 @@
 | Connections / AI | Interfaces only; no providers or keys |
 
 Excluded text includes scripts, styles, form controls, buttons, editable elements, hidden/aria-hidden subtrees, and non-HTML text. CSS visibility alone is not inspected. Shadow roots, iframes, canvas, PDF viewers and browser-protected pages are not scanned. Phrases split by HTML tags do not match. Regex anchors refer to individual text nodes. Matching has documented large-page limits and does not perform semantic search. No remote services, syncing, import/export, per-site UI, profile renaming or in-place rule editing are included.
+
+## Expanded feature status
+
+“Planned” means documented requirements, with no shipping date implied.
+
+| Feature | Current status |
+| --- | --- |
+| Global switch, independent profiles, positive/negative highlights | Available in the foundation; native browser validation remains pending |
+| Popup, side panel and settings | Available; persistent toolbar/sidebar preference planned |
+| Profile rename, row editing/activity, search, word-list tabs, backups | Planned; current rules use delete/recreate |
+| Matching criteria | Seven modes available; the source brief's 17-type catalog needs definitions |
+| Highlight colors | Global positive/negative colors available; per-keyword presets/custom colors planned |
+| AI discovery and human approval UI | Provider-neutral interfaces only; OpenAI/Anthropic adapters, credentials and review UI planned |
+| Live unique/repeated keyword counts | Planned; no counting or count history today |
+| Auto Scroll, pagination, positive pause/slowdown, color filters and Resume shortcut | Planned |
+| URL visit and popup/overlay history | Planned; detailed visit semantics still need specification |
+| Autoplay location checkbot | Planned; import schema and author matching still need specification |
+| Automatic ad skipping and player adapters | Planned; no player compatibility claims |
+
+See the [full target behaviors, privacy boundaries and implementation gaps](feature-requirements.md). Documentation does not enable new controls or grant new permissions.
