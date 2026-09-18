@@ -1,0 +1,8 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Saved text · Scout</title><link rel="stylesheet" href="style.css"></head><body><main class="dashboard">
+<header><span class="mark">S</span><div><h1>Saved text</h1><p>Profile Scout / reusable text</p></div><span class="badge">On this device</span></header>
+<p class="subtitle">Save a phrase here or choose Save text after posting on X. Enable “Save &amp; reuse text” to insert it from the Saved text picker in X text boxes. Text is never posted automatically.</p>
+<form id="add"><label for="text">Add reusable text</label><textarea id="text" rows="3" maxlength="50000" required placeholder="Text you want to reuse…"></textarea><button class="primary" type="submit">Save text</button></form>
+<div class="toolbar"><input id="search" type="search" placeholder="Search saved text…" aria-label="Search saved text"><span id="count"></span></div>
+<p id="notice" role="status" aria-live="polite" class="notice"></p><div id="items"></div>
+<p class="notice">Saved text persists across extension reloads and profile-log resets. Deleting a saved text removes it from future suggestions. Uninstalling the extension deletes its local storage.</p>
+</main><script src="library.js"></script></body></html>

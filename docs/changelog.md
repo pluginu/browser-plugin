@@ -42,3 +42,8 @@ Updated feature status, setup instructions, storage migration details and the na
 - Added temporary lowercase p icons for the extension, pinned toolbar and extension-page favicons.
 - Standardized “The most connected dog online” across the interface and current product documentation. Introduced copy about learning the tools, building connections and becoming self-reliant.
 - Replaced inherited Spot/Skip the noise copy with Plug Inu wording and Highlight/Caution rule labels. Historical request records are preserved.
+
+
+## 2026-09-17 — Executable X domain skill
+
+Ported the supplied X Profile Scout 1.3.0 runtime into a portable skill with 14 action contracts and LLM/script routing. Added packaged script controls, isolated X storage/messages, exact-host/sender validation, deactivation stopping, explicit tab selection, portable ZIP/contract registry and an integrity-checking bot download CLI. Retained original simulated-page regression tests and added integration coverage. No live X actions or remote registry deployment were performed.

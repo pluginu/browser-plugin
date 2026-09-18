@@ -2,7 +2,7 @@
 
 **The most connected dog online.** Plug Inu shares his tools and know-how to help you build your own connections and become self-reliant.
 
-A small Chrome/Chromium Manifest V3 extension that highlights your chosen words and phrases on webpages. Plain JavaScript, no runtime dependencies, no accounts or external requests.
+A small Chrome/Chromium Manifest V3 extension that highlights your chosen words and phrases on webpages. Plain JavaScript, no runtime dependencies, no added accounts, model service or telemetry. Domain scripts use your signed-in website session only when enabled.
 
 ## Develop and load
 
@@ -35,7 +35,8 @@ Rebuild and click Reload on the extension after source changes. `dist/` is gener
 - Versioned local storage with migrations and serialized writes.
 - Dynamic page observation and removable range highlights, without DOM text wrappers.
 - Dedicated **Manage skills** configuration with activation, search, on-demand loading, bundled + local definitions, URL/input/output/action contracts, file import, and Markdown/JSON export. See [domain skills](docs/domain-skills.md).
-- Provider-neutral connection and AI suggestion interfaces; no speculative integrations.
+- X domain skill with 14 tasks, LLM/script selection, profile scanning and filters, optional follows, saved-country hover, reusable text and record backups. Includes a domain package registry and bot download CLI.
+- Provider-neutral connection and AI suggestion interfaces; no model provider is configured.
 
 The initial profile list is empty so nothing is highlighted until you choose your interests. Rules are local to this browser and are not synced. Rule editing currently means deleting and recreating a rule.
 
@@ -43,10 +44,10 @@ The [expanded feature requirements](docs/feature-requirements.md) describe the P
 
 ## Permissions and privacy
 
-`storage` saves local configuration. `sidePanel` provides the persistent interface. Declared HTTP/HTTPS content scripts allow highlighting across websites and cause Chrome to request website access. Chrome's extension details let you restrict site access. No history, cookies, network services or telemetry are used. Do not store credentials in connection configuration; authentication is not implemented.
+`storage` saves local configuration. `sidePanel` provides the persistent interface. Declared HTTP/HTTPS content scripts allow highlighting across websites and cause Chrome to request website access. Chrome's extension details let you restrict site access. `scripting` and exact `https://x.com/*` host access attach X skills to existing tabs. `unlimitedStorage` retains profile records and reusable text locally. No browser-history or cookie APIs, model services or telemetry are used. Do not store credentials in connection configuration; authentication is not implemented.
 
 Browser internal pages, extension stores, PDFs, shadow DOM and frames are outside the first version. Matching is per text node, so phrases spanning inline elements are not matched. See [features and limits](docs/features.md), [architecture](docs/architecture.md), [manual browser checks](docs/manual-testing.md), and [changelog](docs/changelog.md).
 
 ## Verification
 
-Automated tests cover matching, profile enablement, storage/migrations, concurrent writes, DOM eligibility, range cleanup, dynamic content, connection contracts, and domain skill merging, activation, import and management UI. `npm run check` is a syntax check, not a type checker. Build validates declared manifest entry points. Native Chrome installation and visual behavior require the manual checklist; they are not asserted by the unit tests.
+Automated tests cover matching, profile enablement, storage/migrations, concurrent writes, DOM eligibility, range cleanup, dynamic content, connection contracts, and domain skill merging, activation, import and management UI. `npm run check` is a syntax check, not a type checker. Build validates declared manifest entry points. The copied Scout regression suite and integration tests also cover domain task routing, isolated storage/messages, deactivation, script tab selection and verified downloads. Native Chrome installation and live X behavior require the manual checklist; they are not asserted by the unit tests.

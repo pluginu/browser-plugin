@@ -6,7 +6,7 @@ import { migrate, defaults } from '../src/storage/model.js';
 test('local overrides merge by action ID, preserve defaults and disable actions without changing bundle', () => {
  const base = structuredClone(bundledSkills[0]);
  const merged = mergeSkill(base, { domain: 'x.com', inputs: [], actions: [{ id: 'search', instructions: 'Search carefully.' }, { id: 'compose', disabled: true }] });
- assert.equal(merged.actions.length, 1);
+ assert.equal(merged.actions.length, base.actions.length - 1);
  assert.equal(merged.actions[0].url, 'https://x.com/search');
  assert.equal(merged.actions[0].instructions, 'Search carefully.');
  assert.deepEqual(merged.inputs, []);

@@ -13,7 +13,7 @@
 - `domains/`: bundled domain contracts, validated local overrides, on-demand merging, JSON/Markdown import/export and configuration screen.
 - `types/`: JSDoc contracts for extension points.
 
-The content script reads local storage; extension pages send explicit commands to the worker. Commands from website content scripts are rejected. The worker applies commands against the latest settings and queues writes to prevent lost updates from multiple interfaces. Failures are returned to the UI, and rejected writes do not poison the queue. Chrome storage events update open interfaces and content scripts. UI refresh is deferred while a form has focus.
+The content script reads local storage; extension pages send explicit commands to the worker. Management commands from website content scripts are rejected. The X runtime accepts its own namespaced messages from authenticated top-frame x.com content scripts and packaged control pages; UI-only operations are rejected from content scripts. The worker applies commands against the latest settings and queues writes to prevent lost updates from multiple interfaces. Failures are returned to the UI, and rejected writes do not poison the queue. Chrome storage events update open interfaces and content scripts. UI refresh is deferred while a form has focus.
 
 ## Storage contract
 
@@ -38,3 +38,12 @@ Connection adapters expose `id`, `connect`, `disconnect`. Registration checks th
 ## Build and browser support
 
 esbuild bundles four entry points (worker, content, shared UI and skills configuration) so content scripts need no dynamic imports or web-accessible resources. jsdom is used only in tests. Chrome 120 is the baseline. The native [side-panel API](https://developer.chrome.com/docs/extensions/reference/api/sidePanel) opens through a user action. Future browser support should replace browser-specific storage/runtime/panel boundaries and check highlight support; it is not claimed today.
+
+
+## Executable domain packages
+
+`skills/x-com/` is the portable skill: short SKILL.md, domain.json, workflow reference and original Scout runtime. `src/domains/packages.js` is the installed entrypoint allowlist; local contracts cannot extend it. The build adapts the preserved source through `scripts/scout-build.mjs` and `x-bridge.js` into `dist/domain-runtime/x-com/`. The adapter isolates storage under `domain:x.com:`, namespaces messages, restricts senders/hosts, handles domain deactivation and adds explicit target-tab selection to the embedded controls. The source scripts themselves remain independently runnable as a standalone extension.
+
+The worker loads both management and Scout handlers; each ignores the other's message envelope. Scout serializes its own writes. The highlighting global switch affects highlighting only; X has its own Start/Stop and domain activation controls. Deactivation persists stopped/off state and preserves records/snippets. On startup inactive domains do not reattach their previous run.
+
+The build also generates a ZIP and SHA-256 registry in `dist/domain-packages/`. The bot CLI resolves an exact hostname and task, verifies contract/archive hashes, and optionally downloads one domain package. It never evaluates downloaded JavaScript. LLM execution is a plan consumed by an external agent with browser tools; no embedded LLM service or remote execution bridge is installed.

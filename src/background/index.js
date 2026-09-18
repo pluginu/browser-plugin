@@ -1,16 +1,20 @@
-import { listSkills, loadSkill, skillMarkdown } from '../domains/model.js';
+import { domainPackages } from '../domains/packages.js';
+import '../domains/x-runtime.js';
+import { listSkills, loadSkill, loadAction, skillMarkdown } from '../domains/model.js';
 import { createRepository } from '../storage/repository.js';
 import { createProfile } from '../profiles/model.js';
 const repository = createRepository(chrome.storage.local);
 chrome.runtime.onInstalled.addListener(() => repository.initialize().catch(console.error));
 chrome.runtime.onMessage.addListener((message, sender, respond) => {
-  if (sender.id !== chrome.runtime.id || sender.tab || !sender.url?.startsWith(chrome.runtime.getURL(''))) return;
+  if (!message?.action) return;
+  if (sender.id !== chrome.runtime.id || !['popup.html', 'sidepanel.html', 'options.html', 'skills.html'].some(path => sender.url === chrome.runtime.getURL(path))) return;
   const action = message?.action;
-  if (action === 'listDomainSkills' || action === 'loadDomainSkill') {
+  if (action === 'listDomainSkills' || action === 'loadDomainSkill' || action === 'loadDomainAction') {
     repository.read().then(state => {
       if (action === 'listDomainSkills') return { skills: listSkills(state.domainSkills, state.disabledDomainSkills) };
+      if (action === 'loadDomainAction') return { plan: loadAction(message.url, message.actionId, message.mode, state.domainSkills, state.disabledDomainSkills) };
       const skill = loadSkill(message.url, state.domainSkills, state.disabledDomainSkills);
-      return { skill, markdown: skillMarkdown(skill) };
+      return { skill, markdown: skillMarkdown(skill), package: domainPackages[skill.domain] ?? null };
     }).then(respond, error => respond({ error: error.message }));
     return true;
   }

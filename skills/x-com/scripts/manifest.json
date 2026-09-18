@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "X \u00b7 Profile Scout",
+  "version": "1.3.0",
+  "description": "Check timeline profiles, save account details, and optionally follow matching countries and connection sources.",
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://x.com/*",
+    "https://twitter.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Profile Scout",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://x.com/*",
+        "https://twitter.com/*"
+      ],
+      "js": [
+        "core.js",
+        "content.js",
+        "hover.js",
+        "snippets.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

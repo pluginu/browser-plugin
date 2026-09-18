@@ -1,14 +1,14 @@
 import { parseSkillFile } from './model.js';
 export function setupDomainSkills(root, reportError) {
   root.innerHTML = `<h2>Your site skills</h2>
-    <p class="hint">Each skill holds instructions for a website. Activate the ones you want, then load their instructions to learn how to use that site. Loading a skill does not run its actions.</p>
+    <p class="hint">Each skill holds instructions for a website. Activate the ones you want, then load their instructions to learn how to use that site. Choose LLM instructions or packaged scripts for a task. Loading a skill does not run its actions.</p>
     <div class="skill-toolbar"><button id="domain-new" type="button">New skill</button><label class="file-label">Import skill file<input id="domain-import" type="file" accept=".json,.md,application/json,text/markdown"></label></div>
     <p id="domain-status" role="status" aria-live="polite"></p>
     <label>Find a skill<input id="domain-search" type="search" placeholder="Search by name or domain"></label>
     <p id="domain-count" class="hint"></p><ul id="domain-catalog"></ul>
     <form id="domain-load"><label>Load by page URL<input name="url" type="url" value="https://x.com/" required></label><button>Load skill</button></form>
     <section id="domain-loaded" hidden><div class="section-heading"><h3 id="domain-loaded-title"></h3><button id="domain-unload" type="button">Unload</button></div>
-    <pre id="domain-preview" tabindex="0" hidden></pre><div class="skill-toolbar"><button id="domain-export" type="button" hidden>Download SKILL.md</button><button id="domain-export-json" type="button">Download JSON</button></div></section>
+    <pre id="domain-preview" tabindex="0" hidden></pre><div class="skill-toolbar"><button id="domain-export" type="button" hidden>Download SKILL.md</button><button id="domain-export-json" type="button">Download JSON</button></div><div id="domain-actions"></div><pre id="domain-plan" hidden tabindex="0"></pre><p id="domain-package-note" class="hint" hidden>Script ZIP contains the bundled X skill and standalone runtime. Download JSON or SKILL.md separately to include local instruction overrides.</p><div class="skill-toolbar"><a id="domain-package" hidden>Download script skill ZIP</a><a id="domain-controls" hidden target="_blank" rel="noopener">Open script controls</a></div></section>
     <details id="domain-editor"><summary>Edit local domain skill</summary><p class="hint">New domains need a complete definition. For bundled skills, enter only changed fields. Actions merge by ID; disabled: true removes an action. Saving replaces the previous local definition. Imported files appear here for review before saving.</p>
     <form id="domain-save"><label>Local definition (JSON)<textarea name="definition" rows="18" required spellcheck="false"></textarea></label><div class="skill-toolbar"><button class="primary">Save local definition</button><button id="domain-cancel" type="button">Close editor</button></div></form></details>`;
   const find = selector => root.querySelector(selector);
@@ -89,7 +89,32 @@ export function setupDomainSkills(root, reportError) {
     find('#domain-loaded-title').textContent = `Loaded: ${loaded.skill.name}`;
     find('#domain-preview').textContent = loaded.markdown;
     find('#domain-loaded').hidden = false; find('#domain-preview').hidden = false; find('#domain-export').hidden = false;
-    status(`${loaded.skill.domain} loaded. Instructions are ready to export.`);
+    const archive = find('#domain-package'), controls = find('#domain-controls');
+    archive.hidden = !result.package; controls.hidden = true;
+    find('#domain-package-note').hidden = !result.package;
+    if (result.package) { archive.href = chrome.runtime.getURL(result.package.archive); archive.download = `${result.skill.domain}-skill.zip`; }
+    find('#domain-plan').hidden = true;
+    const actions = find('#domain-actions'); actions.replaceChildren();
+    for (const action of loaded.skill.actions) {
+      const row = document.createElement('div'); row.className = 'skill-card';
+      const title = document.createElement('h4'); title.textContent = action.description;
+      const mode = document.createElement('select'); mode.setAttribute('aria-label', `Execution mode for ${action.id}`);
+      for (const value of ['auto', ...(action.execution?.modes ?? ['llm'])]) {
+        const option = document.createElement('option'); option.value = value; option.textContent = value === 'auto' ? 'Automatic' : value === 'llm' ? 'LLM instructions' : 'Packaged script'; mode.append(option);
+      }
+      row.append(title, mode, makeButton('Load task', async () => {
+        const expected = loaded;
+        const { plan } = await request('loadDomainAction', { url: `https://${expected.skill.domain}/`, actionId: action.id, mode: mode.value });
+        if (loaded !== expected) return;
+        find('#domain-plan').textContent = JSON.stringify(plan, null, 2); find('#domain-plan').hidden = false;
+        const entry = plan.mode === 'script' && expected.package?.entries[plan.script.entry];
+        controls.hidden = !entry;
+        if (entry) controls.href = chrome.runtime.getURL(entry);
+        status(`${action.id}: ${plan.mode === 'script' ? 'script controls ready' : 'LLM instructions ready'}. No task has been executed.`);
+      }));
+      actions.append(row);
+    }
+    status(`${loaded.skill.domain} loaded. Choose a task or download the skill.`);
   };
   find('#domain-search').oninput = drawCatalog;
   find('#domain-load').onsubmit = event => { event.preventDefault(); run(loadCurrent); };

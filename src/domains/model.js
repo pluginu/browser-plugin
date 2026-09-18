@@ -41,7 +41,17 @@ export function validateSkill(skill, partial = false) {
     if (!Array.isArray(skill.actions) || skill.actions.length > 50) throw new Error('Provide at most 50 actions.');
     const ids = new Set();
     for (const action of skill.actions) {
-      if (!object(action) || Object.keys(action).some(key => !['id', 'description', 'url', 'inputs', 'outputs', 'instructions', 'disabled'].includes(key))) throw new Error('Invalid action.');
+      if (!object(action) || Object.keys(action).some(key => !['id', 'description', 'url', 'inputs', 'outputs', 'instructions', 'disabled', 'execution'].includes(key))) throw new Error('Invalid action.');
+      if (own(action, 'execution')) {
+        const execution = action.execution;
+        if (!object(execution) || Object.keys(execution).some(key => !['modes', 'script'].includes(key)) || !Array.isArray(execution.modes) || !execution.modes.length || new Set(execution.modes).size !== execution.modes.length || execution.modes.some(mode => !['llm', 'script'].includes(mode))) throw new Error('Invalid execution modes.');
+        if (execution.modes.includes('script')) {
+          const script = execution.script;
+          if (!object(script) || Object.keys(script).some(key => !['entry', 'operation'].includes(key))) throw new Error('Invalid script descriptor.');
+          text(script.entry, 200); text(script.operation, 200);
+          if (!/^scripts\/[a-z0-9][a-z0-9/.-]*$/.test(script.entry) || script.entry.split('/').some(part => !part || part === '.' || part === '..')) throw new Error('Script entry must be a relative packaged scripts path.');
+        } else if (own(execution, 'script')) throw new Error('Script descriptor requires script mode.');
+      }
       text(action.id, 80);
       if (ids.has(action.id)) throw new Error('Duplicate action ID.');
       ids.add(action.id);
@@ -83,7 +93,7 @@ export function loadSkill(value, local = [], disabled = []) {
 }
 export function skillMarkdown(skill) {
   validateSkill(skill);
-  return `# ${skill.name}\n\nDomain: ${skill.domain}\n\n${skill.description}\n\n${skill.instructions}\n\n## Definition\n\n\`\`\`json\n${JSON.stringify(skill, null, 2)}\n\`\`\`\n`;
+  return `---\nname: ${skill.domain.replaceAll('.', '-')}\ndescription: ${JSON.stringify(skill.description)}\n---\n\n# ${skill.name}\n\nDomain: ${skill.domain}\n\n${skill.description}\n\n${skill.instructions}\n\n## Definition\n\n\`\`\`json\n${JSON.stringify(skill, null, 2)}\n\`\`\`\n`;
 }
 export function validateLocalSkills(skills) {
   if (!Array.isArray(skills) || skills.length > 100 || JSON.stringify(skills).length > 1000000) throw new Error('Local skills exceed the allowed size.');
@@ -103,4 +113,20 @@ export function parseSkillFile(content) {
   const skill = JSON.parse(json);
   validateLocalSkills([skill]);
   return skill;
+}
+
+// This resolves an execution plan, never runs page code or starts an agent.
+export function loadAction(value, actionId, mode = 'auto', local = [], disabled = []) {
+  const skill = loadSkill(value, local, disabled);
+  return planAction(skill, actionId, mode);
+}
+export function planAction(skill, actionId, mode = 'auto') {
+  validateSkill(skill);
+  const action = skill.actions.find(item => item.id === actionId && !item.disabled);
+  if (!action) throw new Error('Unknown or disabled domain action.');
+  const modes = action.execution?.modes ?? ['llm'];
+  const selected = mode === 'auto' ? (modes.includes('script') ? 'script' : 'llm') : mode;
+  if (!modes.includes(selected)) throw new Error('This action does not support the selected execution mode.');
+  return { domain: skill.domain, action, mode: selected, instructions: skill.instructions,
+    ...(selected === 'script' ? { script: action.execution.script } : {}) };
 }

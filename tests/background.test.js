@@ -2,17 +2,19 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { build } from 'esbuild';
+import { scoutPlugin } from '../scripts/scout-build.mjs';
 test('worker command flow persists profiles and rules; rejects website senders and invalid writes', async () => {
- const { outputFiles } = await build({ entryPoints: ['src/background/index.js'], bundle: true, write: false, format: 'iife' });
+ const { outputFiles } = await build({ entryPoints: ['src/background/index.js'], plugins: [scoutPlugin], bundle: true, write: false, format: 'iife' });
  let listener; let data = {};
  const chrome = {
-  storage: { local: { get: async () => structuredClone(data), set: async value => { data = structuredClone(value); } } },
-  runtime: { id: 'test', getURL: path => `chrome-extension://test/${path}`, onInstalled: { addListener() {} }, onMessage: { addListener: cb => { listener = cb; } } },
+  tabs: { onRemoved: { addListener() {} } },
+ storage: { onChanged: { addListener() {} }, local: { get: async () => structuredClone(data), set: async value => { data = structuredClone(value); } } },
+  runtime: { getManifest: () => ({ version: 'test' }), id: 'test', getURL: path => `chrome-extension://test/${path}`, onInstalled: { addListener() {} }, onMessage: { addListener: cb => { listener = cb; } } },
  };
  vm.runInNewContext(outputFiles[0].text, { chrome, crypto: globalThis.crypto, console, URL, structuredClone });
  const sender = { id: 'test', url: 'chrome-extension://test/popup.html' };
  const command = message => new Promise(resolve => listener(message, sender, resolve));
- assert.equal(listener({ action: 'toggleGlobal' }, { ...sender, tab: { id: 1 } }, () => assert.fail('Content scripts may not write settings')), undefined);
+ assert.equal(listener({ action: 'toggleGlobal' }, { ...sender, url: 'https://x.com/', tab: { id: 1 } }, () => assert.fail('Content scripts may not write settings')), undefined);
  assert.equal((await command({ action: 'read' })).state.enabled, true);
  assert.equal((await command({ action: 'listDomainSkills' })).skills[0].domain, 'x.com');
  assert.equal((await command({ action: 'loadDomainSkill', url: 'https://x.com/home' })).skill.name, 'X');

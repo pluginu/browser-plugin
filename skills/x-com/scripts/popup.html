@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Profile Scout</title><link rel="stylesheet" href="style.css"></head>
+<body class="popup">
+<header><span class="mark">S</span><div><h1>Profile Scout</h1><p>X / Country filters</p></div><span id="badge" class="badge">Stopped</span></header>
+<section class="status"><span class="eyebrow">SCANNER STATUS</span><p id="status" aria-live="polite">Loading…</p><small id="progress">Progress is saved automatically on this device.</small></section>
+<label class="toggle"><span>Show country on post hover<small>Saved country details and matching highlight.</small></span><input id="hoverEnabled" type="checkbox"></label>
+<label class="toggle"><span>Save &amp; reuse text<small>Offer to save sent posts; reuse in X text boxes.</small></span><input id="snippetsEnabled" type="checkbox"></label>
+<button id="library" class="secondary" type="button">Saved text library <span>↗</span></button>
+<form id="settings">
+<label for="countries">Countries / regions to match</label>
+<textarea id="countries" rows="3" required placeholder="United States&#10;United Kingdom&#10;Canada">United States</textarea>
+<small>Use country labels exactly as X displays them, one per line or separated by commas. Do not include “App Store” here.</small>
+<label for="rule" class="filter-label">Read country from</label><select id="rule"><option value="connection">Connected via (country before source)</option><option value="account">Account based in</option><option value="either">Either field</option></select>
+<fieldset id="sources"><legend>Allowed connection sources</legend>
+<label><input type="checkbox" name="source" value="appstore" checked> App Store</label>
+<label><input type="checkbox" name="source" value="android"> Android App / Google Play</label>
+<label><input type="checkbox" name="source" value="web"> Web</label>
+<label><input type="checkbox" name="source" value="any"> Any source (including unavailable)</label>
+</fieldset><small id="filter-help">Country and source must both match. A plain “Web” label has no country; use Account based in or Either field.</small>
+<label class="toggle"><span>Automatically follow matches<small>Clicks Follow on qualifying profiles.</small></span><input id="autoFollow" type="checkbox" checked></label>
+<div class="fields"><div><label for="delay">Profile delay (seconds)</label><input id="delay" type="number" min="1" max="120" value="12" required></div><div><label for="limit">Follows per run</label><input id="limit" type="number" min="1" max="100" value="20" required></div></div>
+<button id="start" class="primary" type="submit">Start on this tab <span>→</span></button>
+</form><button id="stop" class="stop" hidden>Stop & save progress</button>
+<button id="records" class="secondary">View records & export <span>↗</span></button>
+<p id="error" class="error" role="alert"></p><footer>Runs only while the selected X tab is active.<br>Use X in English. Open Home to start.</footer>
+<script src="core.js"></script><script src="popup.js"></script></body></html>

@@ -4,7 +4,7 @@ Plug Inu helps you learn the tools to build your own connections. The current to
 
 | Capability | Initial behavior |
 | --- | --- |
-| Global switch | Stops scans and clears highlights immediately |
+| Global switch | Stops highlighting scans and clears highlights immediately; X has separate controls |
 | Profiles | Create, delete and independently enable; up to 50 |
 | Rules | Positive or negative; create/delete; up to 200 total |
 | Matching | Case insensitive by default; optional case sensitivity |
@@ -15,12 +15,12 @@ Plug Inu helps you learn the tools to build your own connections. The current to
 | Regex | Advanced bounded syntax; see architecture |
 | Preferences | Positive/negative colors; negatives also underlined |
 | UI | Popup, persistent native side panel, options page and dedicated skills configuration |
-| Domain skills | Exact-domain contracts; bundled X example plus local overrides |
+| Domain skills | Exact-domain contracts; bundled X workflows plus local overrides |
 | Skills management | Persistent activation, search, load/unload, create/edit/reset/delete and JSON/Markdown import/export |
 | Storage | Local only, versioned, migrated and validated |
 | Connections / AI | Interfaces only; no providers or keys |
 
-Excluded text includes scripts, styles, form controls, buttons, editable elements, hidden/aria-hidden subtrees, and non-HTML text. CSS visibility alone is not inspected. Shadow roots, iframes, canvas, PDF viewers and browser-protected pages are not scanned. Phrases split by HTML tags do not match. Regex anchors refer to individual text nodes. Matching has documented large-page limits and does not perform semantic search. No remote services, syncing, profile backups, profile renaming or in-place rule editing are included. Domain skills have their own [configuration and import/export](domain-skills.md); skill actions are instructions, with no automatic execution or external agent integration.
+Excluded text includes scripts, styles, form controls, buttons, editable elements, hidden/aria-hidden subtrees, and non-HTML text. CSS visibility alone is not inspected. Shadow roots, iframes, canvas, PDF viewers and browser-protected pages are not scanned. Phrases split by HTML tags do not match. Regex anchors refer to individual text nodes. Matching has documented large-page limits and does not perform semantic search. No remote model services, syncing, highlighting-profile backups, profile renaming or in-place rule editing are included. Domain skills have their own [configuration and import/export](domain-skills.md); X actions offer LLM instructions or bundled script controls; downloads and task loading never execute. External agent/model integration remains separate.
 
 ## Expanded feature status
 
@@ -38,7 +38,7 @@ Excluded text includes scripts, styles, form controls, buttons, editable element
 | Live unique/repeated keyword counts | Planned; no counting or count history today |
 | Auto Scroll, pagination, positive pause/slowdown, color filters and Resume shortcut | Planned |
 | URL visit and popup/overlay history | Planned; detailed visit semantics still need specification |
-| Autoplay location checkbot | Planned; import schema and author matching still need specification |
+| X account-country scout | Available through the X domain skill: matching, optional follows, saved-country hover and CSV/JSON profile records; live X verification pending |
 | Automatic ad skipping and player adapters | Planned; no player compatibility claims |
 
 See the [full target behaviors, privacy boundaries and implementation gaps](feature-requirements.md). Documentation does not enable new controls or grant new permissions.

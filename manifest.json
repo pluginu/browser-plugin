@@ -6,7 +6,9 @@
   "minimum_chrome_version": "120",
   "permissions": [
     "storage",
-    "sidePanel"
+    "sidePanel",
+    "scripting",
+    "unlimitedStorage"
   ],
   "background": {
     "service_worker": "background.js",
@@ -37,6 +39,19 @@
         "content.js"
       ],
       "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://x.com/*"
+      ],
+      "js": [
+        "domain-runtime/x-com/bridge.js",
+        "domain-runtime/x-com/core.js",
+        "domain-runtime/x-com/content.js",
+        "domain-runtime/x-com/hover.js",
+        "domain-runtime/x-com/snippets.js"
+      ],
+      "run_at": "document_idle"
     }
   ],
   "icons": {
@@ -44,5 +59,8 @@
     "32": "public/icons/icon-32.png",
     "48": "public/icons/icon-48.png",
     "128": "public/icons/icon-128.png"
-  }
+  },
+  "host_permissions": [
+    "https://x.com/*"
+  ]
 }

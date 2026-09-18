@@ -710,3 +710,34 @@ These requests were implemented earlier in this session but were not saved at th
 
 - All 20 tests, JavaScript syntax checks, production build and whitespace checks passed. Verified generated icon dimensions and favicon references for all extension pages.
 - Publishing the reviewed changes on main to origin/main using SSH; the remote commit and clean working tree will be verified after push.
+
+
+## 2026-09-17 — Convert X Profile Scout into domain skills
+
+### User prompt
+
+look at.  app in this path /Users/armenmerikyan/Desktop/wd/spotadog/x\_us\_user\_follow and copy all feature covertting tem to skills best solution we have. proposed for domains so bot downloads skills per down they can either use llm or scriptsto execute tsak
+
+### Processing notes
+
+- Initial repository discovery preceded finding the prompt-history instruction; the prompt was recorded as soon as that instruction was read.
+- Preserved the supplied Profile Scout runtime in `skills/x-com/scripts/` and converted its workflows into 14 action contracts, a concise SKILL.md and a detailed workflow reference. Original source app files were not changed.
+- Added LLM/script task selection, installed-script entrypoint links, an integrated X runtime with namespaced storage/messages, exact-host/sender checks, target-tab selection and domain deactivation handling. Existing highlighting controls/data remain independent.
+- Added standalone domain ZIP generation, a contract/checksum registry, and a bot CLI supporting exact-domain lookup, per-task plans, local or HTTPS registries and verified downloads without executing code. No registry was deployed and no external bot/model service was connected.
+- Retained the original Scout regression tests, fixed their teardown to stop observers before closing simulated pages, and added routing, UI, authentication, storage isolation, deactivation and download-integrity tests.
+- Validation: 104 automated tests passed; JavaScript/CJS syntax checks, production build, skill validation, ZIP CRC/content validation and whitespace checks passed. Exercised the bot downloader against the built registry and verified `executed: false`.
+- Live Chrome/X selector behavior and signed-in actions were not tested. No follows, posts, source-app data migration, commits or publication occurred. Existing source-app profile data can be transferred explicitly through JSON export/import; snippet data is separate.
+
+
+## 2026-09-18 — Execute GitHub flow
+
+### User prompt
+
+execurte github flow
+
+### Processing notes
+
+- Reviewed the X domain-skill implementation, portable runtime, bot downloader, tests, permissions and documentation for publication using the established current-branch SSH workflow on main.
+- Fetched origin and verified main had no remote divergence before committing.
+- Validation: all 104 automated tests, JavaScript/CJS syntax checks, production build and whitespace checks passed. Live signed-in Chrome/X behavior remains unverified; no follows or posts were performed.
+- Publishing the reviewed changes to origin/main with the implementation prompts and processing notes included. The remote commit and clean working tree will be verified after the push. This workflow does not create a separate pull request or GitHub comment.

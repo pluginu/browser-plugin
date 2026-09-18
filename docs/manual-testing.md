@@ -16,3 +16,14 @@ Automated DOM tests use jsdom and a Highlight registry test double. They do not 
 11. Open **Manage skills** from each interface. Follow the [domain skills manual checks](domain-skills.md#manual-verification) for activation persistence, loading, editing, validation, search, import/export, reset and deletion. Confirm changing highlighting preferences leaves a loaded skill preview intact.
 
 Native load and visual QA remain pending until this checklist is run in an actual Chromium extension session.
+
+
+## X domain scripts
+
+1. Rebuild and reload the extension; accept its new scripting, unlimited local storage and exact x.com host permissions. Open English X Home and Manage skills.
+2. Load X, load scan-profiles in script mode and open controls. Verify the X tab selector. Turn off automatic following, Start, and verify focus returns to that tab. Compare a few records against Joined → About this account. Confirm highlighting still works.
+3. Stop, reload and resume; verify saved records/attempts/skip state survive. Check tab/window focus and draft pausing. Follow behavior requires a separately authorized live test; do not enable it just to validate collection.
+4. Enable hover and saved text independently. Verify author vs quoted author, unknown fields and current filter matches. Manually send a test post only if authorized; confirm the save offer appears after success, save is optional, and reuse never sends. Check cursor insertion/fallback and library persistence after profile reset.
+5. Test records search/pagination, deferred view, all-record CSV/JSON export and stopped-only import/retry/reset using disposable records. Transfer an old Scout JSON backup if wanted; data is not migrated from its extension ID automatically.
+6. Deactivate X while it is running. Verify scan/widgets stop, other highlighting stays enabled, data remains and Start is rejected. Reactivate and explicitly re-enable the desired features.
+7. Download the script ZIP and verify extraction contains x-com/SKILL.md and scripts/manifest.json. In a separate test Chrome profile, load scripts/ as an unpacked extension and confirm its active-tab popup workflow. This creates a separate data store.

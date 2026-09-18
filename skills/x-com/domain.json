@@ -1,0 +1,440 @@
+{
+  "domain": "x.com",
+  "name": "X",
+  "description": "Search and draft on X; scout timeline accounts, filter countries/sources, manage optional follows, saved country cards, reusable text and profile backups.",
+  "urls": [
+    "https://x.com/",
+    "https://x.com/home",
+    "https://x.com/search",
+    "https://x.com/compose/post"
+  ],
+  "instructions": "Use the signed-in session on the exact x.com domain. Load only the requested action. Choose script for supported deterministic workflows, LLM for visual reading/drafting or changed layouts. A script entry is a packaged Chrome extension page, not a shell program or remotely evaluated code. Read references/workflows.md for script setup and state invariants. Loading/downloading does not execute. Only follow, publish, save or delete within the user’s explicit task scope. Missing metadata stays unknown; country labels do not establish citizenship or current device. Selectors assume English X; stop and report when a workflow cannot be verified.",
+  "inputs": [
+    {
+      "name": "settings",
+      "type": "object",
+      "description": "countries (labels), countryField (account|connection|either), sources (any|appstore|android|web), autoFollow, delaySeconds (1–120), maxFollows (1–100)."
+    }
+  ],
+  "outputs": [
+    {
+      "name": "records",
+      "type": "array",
+      "description": "handle, profileUrl, checkedAt, accountBasedIn, connectedVia, dateJoined, status, followStatus, note."
+    }
+  ],
+  "actions": [
+    {
+      "id": "search",
+      "description": "Search visible posts.",
+      "url": "https://x.com/search",
+      "inputs": [
+        {
+          "name": "query",
+          "type": "string",
+          "description": "Search query."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "posts",
+          "type": "array",
+          "description": "Visible posts with author and source URL."
+        }
+      ],
+      "instructions": "Enter the query, read visible results and preserve source URLs. Do not infer unseen results.",
+      "execution": {
+        "modes": [
+          "llm"
+        ]
+      }
+    },
+    {
+      "id": "compose",
+      "description": "Prepare a post for review.",
+      "url": "https://x.com/compose/post",
+      "inputs": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Draft text."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "draft",
+          "type": "string",
+          "description": "Prepared draft."
+        }
+      ],
+      "instructions": "Prepare the requested draft. Publish only when explicitly authorized; drafting alone does not authorize publishing.",
+      "execution": {
+        "modes": [
+          "llm"
+        ]
+      }
+    },
+    {
+      "id": "configure-scout",
+      "description": "Configure country/source matching and run limits.",
+      "url": "https://x.com/home",
+      "inputs": [
+        {
+          "name": "settings",
+          "type": "object",
+          "description": "countries (labels), countryField (account|connection|either), sources (any|appstore|android|web), autoFollow, delaySeconds (1–120), maxFollows (1–100)."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "settings",
+          "type": "object",
+          "description": "countries (labels), countryField (account|connection|either), sources (any|appstore|android|web), autoFollow, delaySeconds (1–120), maxFollows (1–100)."
+        }
+      ],
+      "instructions": "Use the country labels displayed by X. Normalize case/whitespace and US aliases only. Country and source must both match. Web without a country must use account/either. Profile biography is not Account based in. Preserve existing skip records when filters change. Stop before editing settings. Following requires explicit user intent. Defaults: United States App Store, 12 seconds, 20 follow attempts.",
+      "execution": {
+        "modes": [
+          "llm",
+          "script"
+        ],
+        "script": {
+          "entry": "scripts/popup.html",
+          "operation": "settings"
+        }
+      }
+    },
+    {
+      "id": "scan-profiles",
+      "description": "Scan Home authors, inspect About this account and optionally follow matches.",
+      "url": "https://x.com/home",
+      "inputs": [
+        {
+          "name": "settings",
+          "type": "object",
+          "description": "countries (labels), countryField (account|connection|either), sources (any|appstore|android|web), autoFollow, delaySeconds (1–120), maxFollows (1–100)."
+        },
+        {
+          "name": "tabId",
+          "type": "number",
+          "description": "Chosen signed-in X Home tab."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "records",
+          "type": "array",
+          "description": "handle, profileUrl, checkedAt, accountBasedIn, connectedVia, dateJoined, status, followStatus, note."
+        },
+        {
+          "name": "run",
+          "type": "object",
+          "description": "Saved tab, phase, current visit, scroll offset, follow attempts and status."
+        }
+      ],
+      "instructions": "Start from Home (including For you/Following). Reserve each unseen handle persistently BEFORE opening the profile. Open Joined to read About this account; save original visible labels, join date, check time and source URL. Skip saved handles across restarts/filter changes. Use configure-scout rules. Follow only if requested, matching and not already following; persist follow intent BEFORE clicking and count attempts. Unconfirmed follow becomes uncertain and is never automatically clicked again. At the attempt limit or a recognized follow restriction, collect only and mark matches deferred. Return Home and resume scrolling. Pause when tab/window loses focus or an editor/draft is active. Stop on verification, general rate limits, navigation changes or a stalled feed; do not bypass them. See references/workflows.md for recovery phases.",
+      "execution": {
+        "modes": [
+          "llm",
+          "script"
+        ],
+        "script": {
+          "entry": "scripts/popup.html",
+          "operation": "start"
+        }
+      }
+    },
+    {
+      "id": "stop-scout",
+      "description": "Stop scanning while retaining progress.",
+      "url": "https://x.com/home",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "run",
+          "type": "object",
+          "description": "Stopped run with saved phase and records."
+        }
+      ],
+      "instructions": "Stop the active run and retain records, current visit, scroll offset and attempt counts. Do not clear the skip list.",
+      "execution": {
+        "modes": [
+          "llm",
+          "script"
+        ],
+        "script": {
+          "entry": "scripts/popup.html",
+          "operation": "stop"
+        }
+      }
+    },
+    {
+      "id": "resume-scout",
+      "description": "Resume a saved profile visit or restart from Home.",
+      "url": "https://x.com/home",
+      "inputs": [
+        {
+          "name": "tabId",
+          "type": "number",
+          "description": "Original selected X tab or Home tab."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "run",
+          "type": "object",
+          "description": "Recovered or restarted run."
+        }
+      ],
+      "instructions": "Reload should reconnect an enabled run without renewing its allowance; stopped scans remain stopped. Resume an unfinished visit in its original tab. Explicit Start from Home abandons a stale visit and begins a new run with saved handles retained. Never repeat a pending/uncertain follow. Scroll restoration after feed refresh is best effort.",
+      "execution": {
+        "modes": [
+          "llm",
+          "script"
+        ],
+        "script": {
+          "entry": "scripts/popup.html",
+          "operation": "start"
+        }
+      }
+    },
+    {
+      "id": "country-hover",
+      "description": "Show saved country and filter results on author hover.",
+      "url": "https://x.com/home",
+      "inputs": [
+        {
+          "name": "enabled",
+          "type": "boolean",
+          "description": "Enable or disable saved-country hover cards."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "account",
+          "type": "object",
+          "description": "Checked/unchecked status, country fields, country match and full filter match."
+        }
+      ],
+      "instructions": "Read saved records only. Identify the main post author, excluding quoted users. Distinguish unchecked from checked without country data. Color indicates country match; separately show full country-plus-source match. Never visit/follow from hover. Works independently of scanning; disable removes the card immediately.",
+      "execution": {
+        "modes": [
+          "llm",
+          "script"
+        ],
+        "script": {
+          "entry": "scripts/popup.html",
+          "operation": "hoverSetting"
+        }
+      }
+    },
+    {
+      "id": "save-reuse-text",
+      "description": "Offer to save confirmed sent text and insert saved text into a draft.",
+      "url": "https://x.com/compose/post",
+      "inputs": [
+        {
+          "name": "enabled",
+          "type": "boolean",
+          "description": "Enable the save offer and picker together."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "draft",
+          "type": "string",
+          "description": "Inserted draft text; never automatically sent."
+        }
+      ],
+      "instructions": "Capture typed text in memory on Post/Reply or Ctrl/Command+Enter. Offer to save only after a fresh sent/published notification AND composer clear/close. Expire unconfirmed attempts at 45 seconds. Exclude quote content, attachments, cancelled/failed sends and ambiguous multi-editor threads. Save only on the user choosing Save text. Normalize NFC, line endings and outer whitespace for duplicate detection, preserving case/internal spacing. Insert at cursor or replace only selection in editable non-password fields. For rich editors use native insertion; if unsupported keep the draft untouched and offer Copy/paste. Never send automatically.",
+      "execution": {
+        "modes": [
+          "llm",
+          "script"
+        ],
+        "script": {
+          "entry": "scripts/popup.html",
+          "operation": "snippetsSetting"
+        }
+      }
+    },
+    {
+      "id": "manage-saved-text",
+      "description": "Search, add, copy or delete reusable text.",
+      "url": "https://x.com/compose/post",
+      "inputs": [
+        {
+          "name": "operation",
+          "type": "string",
+          "description": "list, save, copy or delete; supply text or id as applicable."
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Text to save (1–50,000 characters)."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Saved snippet identifier for deletion."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "snippets",
+          "type": "array",
+          "description": "Persistent id, text and createdAt entries."
+        }
+      ],
+      "instructions": "Use the saved-text library. Save only the requested text, deduplicate normalized text, copy only on request, and delete only the selected item. Profile reset must not remove saved text.",
+      "execution": {
+        "modes": [
+          "llm",
+          "script"
+        ],
+        "script": {
+          "entry": "scripts/library.html",
+          "operation": "snippetList|snippetSave|snippetDelete"
+        }
+      }
+    },
+    {
+      "id": "view-records",
+      "description": "Search records, current matches and deferred future follows.",
+      "url": "https://x.com/home",
+      "inputs": [
+        {
+          "name": "query",
+          "type": "string",
+          "description": "Search handle, country, source, status or notes."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "records",
+          "type": "array",
+          "description": "handle, profileUrl, checkedAt, accountBasedIn, connectedVia, dateJoined, status, followStatus, note."
+        }
+      ],
+      "instructions": "Show saved records with search and pagination. Compute matches against current filters. Future follows lists deferred records; listing them must not revisit or automatically follow them.",
+      "execution": {
+        "modes": [
+          "llm",
+          "script"
+        ],
+        "script": {
+          "entry": "scripts/records.html",
+          "operation": "all"
+        }
+      }
+    },
+    {
+      "id": "export-records",
+      "description": "Export all saved records as CSV or JSON backup.",
+      "url": "https://x.com/home",
+      "inputs": [
+        {
+          "name": "format",
+          "type": "string",
+          "description": "csv or json"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "backup",
+          "type": "string",
+          "description": "CSV or version 1 JSON with exportedAt and records."
+        }
+      ],
+      "instructions": "Export ALL records regardless of search filter. CSV must quote values and neutralize spreadsheet formulas. JSON uses version:1, exportedAt and records. Preserve raw labels and follow status.",
+      "execution": {
+        "modes": [
+          "llm",
+          "script"
+        ],
+        "script": {
+          "entry": "scripts/records.html",
+          "operation": "all + Scout.csv / JSON.stringify"
+        }
+      }
+    },
+    {
+      "id": "import-records",
+      "description": "Merge a Profile Scout JSON backup.",
+      "url": "https://x.com/home",
+      "inputs": [
+        {
+          "name": "backup",
+          "type": "object",
+          "description": "Version 1 JSON backup, at most 100,000 records / 50 MB file."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "imported",
+          "type": "number",
+          "description": "New/newer records merged."
+        }
+      ],
+      "instructions": "Stop scanning. Validate the entire backup before writing; normalize handles and canonical profile URLs. Merge by handle and retain the newer checkedAt. Preserve follow states, settings and saved text. Invalid backups leave existing data intact.",
+      "execution": {
+        "modes": [
+          "llm",
+          "script"
+        ],
+        "script": {
+          "entry": "scripts/records.html",
+          "operation": "import"
+        }
+      }
+    },
+    {
+      "id": "retry-unavailable",
+      "description": "Allow failed metadata checks to be visited again.",
+      "url": "https://x.com/home",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "count",
+          "type": "number",
+          "description": "Records removed from skip list."
+        }
+      ],
+      "instructions": "Stop scanning. Remove only unavailable/error records without pending, uncertain, followed or requested follow states. Recheck when encountered; do not build an automatic follow queue.",
+      "execution": {
+        "modes": [
+          "llm",
+          "script"
+        ],
+        "script": {
+          "entry": "scripts/records.html",
+          "operation": "retry"
+        }
+      }
+    },
+    {
+      "id": "reset-profiles",
+      "description": "Explicitly clear saved profiles and scan progress.",
+      "url": "https://x.com/home",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "count",
+          "type": "number",
+          "description": "Deleted profile record count."
+        }
+      ],
+      "instructions": "Stop scanning and obtain explicit intent to reset profiles. Clear progress before records so interruption cannot resume an old visit. Preserve settings, saved text and real X follows. The script displays a confirmation describing the deletion.",
+      "execution": {
+        "modes": [
+          "llm",
+          "script"
+        ],
+        "script": {
+          "entry": "scripts/records.html",
+          "operation": "reset"
+        }
+      }
+    }
+  ]
+}
